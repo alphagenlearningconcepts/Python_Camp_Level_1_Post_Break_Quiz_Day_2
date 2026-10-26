@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python Quiz: Arithmetic Operators - Alphagen Learning</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;600;700&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Poppins", "sans-serif"],
+              mono: ["Fira Code", "monospace"],
+            },
+            colors: {
+              alphagen: {
+                purple: "#5E48C4",
+                purpleDark: "#4A3AAD",
+                purpleMid: "#7B6ED4",
+                purplePale: "#EAE7FE",
+                purpleGhost: "#F5F4FF",
+                yellow: "#FFD071",
+                yellowDark: "#E6B84A",
+                yellowPale: "#FFF3CC",
+                nearBlack: "#1A1A1A",
+                darkGrey: "#404048",
+                midGrey: "#888896",
+                lightGrey: "#F2F2F4",
+                cyan: "#59E4FB",
+                cyanDark: "#055F6E",
+                cyanPale: "#E0FAFE",
+                coral: "#ED5661",
+                coralDark: "#993040",
+                coralPale: "#FFF0F1",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        margin: 0;
+        padding: 12px;
+        background: #0f081d;
+        font-family: "Poppins", sans-serif;
+        color: #1a1a1a;
+        overflow-x: hidden;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .stage-wrapper {
+        width: 100%;
+        max-width: 1280px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .slide-stage {
+        width: 1280px;
+        height: 720px;
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+        background: #fff;
+        border-radius: 28px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        border: 1px solid #eae7fe;
+        transform-origin: top center;
+      }
+      .slide-panel {
+        width: 1280px;
+        height: 720px;
+        padding: 64px 48px 24px;
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        background: #fff;
+      }
+      .slide-panel.active {
+        display: flex;
+        animation: slideInSmooth 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      @keyframes slideInSmooth {
+        from {
+          opacity: 0;
+          transform: scale(0.98) translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+      .btn-interactive {
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 6px 15px -3px rgba(94, 72, 196, 0.2);
+      }
+      .btn-interactive:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 10px 20px -5px rgba(94, 72, 196, 0.35);
+      }
+      .btn-interactive:active {
+        transform: translateY(1px) scale(0.98);
+      }
+      .nav-bar {
+        width: 1280px;
+        margin: 12px auto 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 16px;
+        transform-origin: top center;
+      }
+      .nav-btn {
+        background: #2a1c68;
+        color: #ffd071;
+        border: 2px solid #5e48c4;
+        padding: 10px 24px;
+        border-radius: 14px;
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+        box-shadow: 0 6px 15px -3px rgba(42, 28, 104, 0.3);
+      }
+      .nav-btn:hover:not(:disabled) {
+        background: #5e48c4;
+        color: #fff;
+        transform: scale(1.04);
+      }
+      .nav-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+      .spark-wavy-underline {
+        position: relative;
+        display: inline-block;
+        color: #5e48c4;
+      }
+      .spark-wavy-underline:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -6px;
+        width: 100%;
+        height: 12px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4' preserveAspectRatio='none'%3E%3Cpath d='M0 2 Q 5 0, 10 2 T 20 2' fill='none' stroke='%23FFD071' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: repeat-x;
+        background-size: 20px 12px;
+      }
+      .quiz-option {
+        background: #fff;
+        border: 2px solid #eae7fe;
+        border-radius: 16px;
+        padding: 14px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #1a1a1a;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: left;
+        box-shadow: 0 4px 12px -2px rgba(94, 72, 196, 0.08);
+        min-height: 64px;
+      }
+      .quiz-option:hover:not(:disabled) {
+        border-color: #5e48c4;
+        background: #f5f4ff;
+        transform: translateX(4px);
+        box-shadow: 0 8px 20px -4px rgba(94, 72, 196, 0.2);
+      }
+      .quiz-option.selected-correct {
+        background: #f0fdf4 !important;
+        border-color: #22c55e !important;
+        color: #14532d !important;
+      }
+      .quiz-option.selected-wrong {
+        background: #fff0f1 !important;
+        border-color: #ed5661 !important;
+        color: #993040 !important;
+      }
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+      .pulse-anim {
+        animation: pulseGlow 2s infinite ease-in-out;
+      }
+      @keyframes floatParticle {
+        0% {
+          transform: translateY(0) rotate(0);
+          opacity: 0.8;
+        }
+        50% {
+          transform: translateY(-20px) rotate(180deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(0) rotate(360deg);
+          opacity: 0.8;
+        }
+      }
+      .floating-shape {
+        animation: floatParticle 4s ease-in-out infinite;
+      }
+      .code-snippet {
+        font-family: "Fira Code", monospace;
+        background: #0f172a;
+        color: #fde047;
+        padding: 8px 12px;
+        border-radius: 10px;
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 20px;
+        line-height: 1.7;
+      }
+      .feedback {
+        padding: 12px;
+        border-radius: 16px;
+        font-size: 13px;
+        font-weight: 700;
+        text-align: center;
+      }
+      .hidden {
+        display: none !important;
+      }
+      @media (max-width: 1300px) {
+        body {
+          justify-content: flex-start;
+        }
+        .stage-wrapper {
+          width: 100%;
+        }
+        .slide-stage {
+          transform: scale(var(--scale, 1));
+          margin-bottom: calc((720px * var(--scale, 1)) - 720px);
+        }
+        .nav-bar {
+          transform: scale(var(--scale, 1));
+          margin-bottom: calc((40px * var(--scale, 1)) - 40px);
+        }
+      }
+      @media (max-width: 700px) {
+        body {
+          padding: 8px;
+        }
+        .slide-stage {
+          border-radius: 18px;
+        }
+        .slide-panel {
+          padding: 36px 28px 20px;
+        }
+        .quiz-option {
+          font-size: 12px;
+          padding: 10px;
+        }
+        .nav-btn {
+          padding: 8px 12px;
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header
+      id="topbar"
+      class="w-full bg-alphagen-purple px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-white shadow-md"
+      style="max-width: 1280px; border-radius: 12px; margin-bottom: 12px"
+    >
+      <div class="flex items-center gap-3">
+        <span
+          class="bg-alphagen-yellow text-alphagen-nearBlack px-4 py-2 rounded-xl font-extrabold text-xs md:text-sm shadow-sm tracking-wide"
+          >ALPHAGEN LEARNING</span
+        ><span
+          class="font-extrabold text-base md:text-lg tracking-tight text-white"
+          >Python Quiz: Arithmetic Operators</span
+        >
+      </div>
+      <div class="flex items-center gap-4">
+        <div
+          class="bg-alphagen-purple-dark px-4 py-1.5 rounded-xl border border-alphagen-purpleMid text-xs font-extrabold flex items-center gap-2 shadow-sm"
+        >
+          <i class="fa-solid fa-star text-alphagen-yellow"></i
+          ><span
+            >Score:
+            <span
+              id="header-score"
+              class="text-alphagen-yellow font-mono text-sm"
+              >0</span
+            >
+            / 50</span
+          >
+        </div>
+        <button
+          onclick="toggleAudio()"
+          id="audio-btn"
+          class="bg-alphagen-purple-dark text-white p-2 rounded-lg shadow-sm"
+          title="Toggle Sound"
+        >
+          <i class="fa-solid fa-volume-high text-sm"></i>
+        </button>
+      </div>
+    </header>
+    <div class="stage-wrapper">
+      <div class="slide-stage">
+        <div
+          id="slide-1"
+          class="slide-panel active justify-center items-center text-center relative overflow-hidden"
+        >
+          <div
+            class="absolute top-10 left-20 w-12 h-12 bg-alphagen-yellow rounded-2xl opacity-40 floating-shape"
+          ></div>
+          <div
+            class="absolute bottom-16 right-24 w-16 h-16 bg-alphagen-cyan rounded-full opacity-40 floating-shape"
+            style="animation-delay: 1s"
+          ></div>
+          <div
+            class="absolute top-24 right-32 w-10 h-10 bg-alphagen-coral rounded-xl opacity-40 floating-shape"
+            style="animation-delay: 2s"
+          ></div>
+          <div
+            class="inline-flex items-center gap-2 bg-alphagen-purpleGhost border-2 border-alphagen-purplePale text-alphagen-purple text-sm font-extrabold px-5 py-2 rounded-full mb-4 tracking-wider uppercase shadow-sm"
+          >
+            <i class="fa-solid fa-bolt text-alphagen-yellowDark"></i> PYTHON
+            QUICK CHALLENGE
+          </div>
+          <h1
+            class="text-5xl font-extrabold text-alphagen-nearBlack mb-6 tracking-tight leading-tight"
+          >
+            Let's Crack<br /><span class="spark-wavy-underline"
+              >the Operators!</span
+            >
+          </h1>
+        
+          <button
+            onclick="goToSlide(2)"
+            class="bg-alphagen-yellow hover:bg-alphagen-yellowDark text-alphagen-nearBlack font-extrabold text-xl px-12 py-5 rounded-2xl shadow-xl btn-interactive flex items-center gap-3 mx-auto pulse-anim"
+          >
+            <span>Start Quiz</span><i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+        <div id="slide-2" class="slide-panel">
+          <div class="flex justify-between items-center">
+            <span
+              class="text-xs uppercase font-extrabold tracking-wider text-alphagen-purple bg-alphagen-purpleGhost px-4 py-1.5 rounded-md border border-alphagen-purplePale"
+              >Question 1 of 5 · 10 Points</span
+            ><span
+              class="bg-alphagen-yellowPale border border-yellow-300 px-3 py-1 rounded-full text-xs font-bold"
+            >
+              <i class="fa-regular fa-clock"></i> Quick question</span
+            >
+          </div>
+          <div class="my-auto space-y-5 max-w-4xl mx-auto w-full">
+            <div
+              class="bg-alphagen-purpleGhost border-2 border-alphagen-purplePale p-6 rounded-3xl shadow-md text-center"
+            >
+              <h3 class="text-xl font-extrabold">Predict the output</h3>
+              <div class="code-snippet">print(8 + 3 * 2)</div>
+            </div>
+            <div class="grid grid-cols-2 gap-3" id="options-1">
+              <button class="quiz-option" onclick="answer(1, 0, this)">
+                A) 22</button
+              ><button class="quiz-option" onclick="answer(1, 1, this)">
+                B) 14</button
+              ><button class="quiz-option" onclick="answer(1, 2, this)">
+                C) 16</button
+              ><button class="quiz-option" onclick="answer(1, 3, this)">
+                D) 13
+              </button>
+            </div>
+            <div id="feedback-1" class="hidden"></div>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-alphagen-purple"
+              >Question 1 Evaluation</span
+            ><button id="next-1" onclick="goToSlide(3)" class="nav-btn hidden">
+              Next Question <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+        <div id="slide-3" class="slide-panel">
+          <div class="flex justify-between items-center">
+            <span
+              class="text-xs uppercase font-extrabold tracking-wider text-alphagen-purple bg-alphagen-purpleGhost px-4 py-1.5 rounded-md border border-alphagen-purplePale"
+              >Question 2 of 5 · 10 Points</span
+            ><span
+              class="bg-alphagen-yellowPale border border-yellow-300 px-3 py-1 rounded-full text-xs font-bold"
+              ><i class="fa-regular fa-clock"></i> Quick question</span
+            >
+          </div>
+          <div class="my-auto space-y-5 max-w-4xl mx-auto w-full">
+            <div
+              class="bg-alphagen-purpleGhost border-2 border-alphagen-purplePale p-6 rounded-3xl shadow-md text-center"
+            >
+              <h3 class="text-xl font-extrabold">What will this code print?</h3>
+              <div class="code-snippet">print(17 // 5)</div>
+            </div>
+            <div class="grid grid-cols-2 gap-3" id="options-2">
+              <button class="quiz-option" onclick="answer(2, 0, this)">
+                A) 3.4</button
+              ><button class="quiz-option" onclick="answer(2, 1, this)">
+                B) 2</button
+              ><button class="quiz-option" onclick="answer(2, 2, this)">
+                C) 3</button
+              ><button class="quiz-option" onclick="answer(2, 3, this)">
+                D) 4
+              </button>
+            </div>
+            <div id="feedback-2" class="hidden"></div>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-alphagen-purple"
+              >Question 2 Evaluation</span
+            ><button id="next-2" onclick="goToSlide(4)" class="nav-btn hidden">
+              Next Question <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+        <div id="slide-4" class="slide-panel">
+          <div class="flex justify-between items-center">
+            <span
+              class="text-xs uppercase font-extrabold tracking-wider text-alphagen-purple bg-alphagen-purpleGhost px-4 py-1.5 rounded-md border border-alphagen-purplePale"
+              >Question 3 of 5 · 10 Points</span
+            ><span
+              class="bg-alphagen-yellowPale border border-yellow-300 px-3 py-1 rounded-full text-xs font-bold"
+              ><i class="fa-regular fa-clock"></i> Quick question</span
+            >
+          </div>
+          <div class="my-auto space-y-5 max-w-4xl mx-auto w-full">
+            <div
+              class="bg-alphagen-purpleGhost border-2 border-alphagen-purplePale p-6 rounded-3xl shadow-md text-center"
+            >
+              <h3 class="text-xl font-extrabold">
+                A small bug needs fixing. Which line correctly finds the
+                remainder?
+              </h3>
+              <div class="code-snippet">
+                number = 14<br />print(number __ 4)
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3" id="options-3">
+              <button class="quiz-option" onclick="answer(3, 0, this)">
+                A) number / 4</button
+              ><button class="quiz-option" onclick="answer(3, 1, this)">
+                B) number // 4</button
+              ><button class="quiz-option" onclick="answer(3, 2, this)">
+                C) number % 4</button
+              ><button class="quiz-option" onclick="answer(3, 3, this)">
+                D) number ** 4
+              </button>
+            </div>
+            <div id="feedback-3" class="hidden"></div>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-alphagen-purple"
+              >Question 3 Evaluation</span
+            ><button id="next-3" onclick="goToSlide(5)" class="nav-btn hidden">
+              Next Question <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+        <div id="slide-5" class="slide-panel">
+          <div class="flex justify-between items-center">
+            <span
+              class="text-xs uppercase font-extrabold tracking-wider text-alphagen-purple bg-alphagen-purpleGhost px-4 py-1.5 rounded-md border border-alphagen-purplePale"
+              >Question 4 of 5 · 10 Points</span
+            ><span
+              class="bg-alphagen-yellowPale border border-yellow-300 px-3 py-1 rounded-full text-xs font-bold"
+              ><i class="fa-regular fa-clock"></i> Quick question</span
+            >
+          </div>
+          <div class="my-auto space-y-5 max-w-4xl mx-auto w-full">
+            <div
+              class="bg-alphagen-purpleGhost border-2 border-alphagen-purplePale p-6 rounded-3xl shadow-md text-center"
+            >
+              <h3 class="text-xl font-extrabold">
+                Name the concept: what does the
+                <code class="font-mono text-alphagen-purple">**</code> operator
+                do in Python?
+              </h3>
+            </div>
+            <div class="grid grid-cols-2 gap-3" id="options-4">
+              <button class="quiz-option" onclick="answer(4, 0, this)">
+                A) Divides one number by another</button
+              ><button class="quiz-option" onclick="answer(4, 1, this)">
+                B) Raises a number to a power</button
+              ><button class="quiz-option" onclick="answer(4, 2, this)">
+                C) Finds the remainder</button
+              ><button class="quiz-option" onclick="answer(4, 3, this)">
+                D) Rounds a number down after division
+              </button>
+            </div>
+            <div id="feedback-4" class="hidden"></div>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-alphagen-purple"
+              >Question 4 Evaluation</span
+            ><button id="next-4" onclick="goToSlide(6)" class="nav-btn hidden">
+              Next Question <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+        <div id="slide-6" class="slide-panel">
+          <div class="flex justify-between items-center">
+            <span
+              class="text-xs uppercase font-extrabold tracking-wider text-alphagen-purple bg-alphagen-purpleGhost px-4 py-1.5 rounded-md border border-alphagen-purplePale"
+              >Question 5 of 5 · 10 Points</span
+            ><span
+              class="bg-alphagen-yellowPale border border-yellow-300 px-3 py-1 rounded-full text-xs font-bold"
+              ><i class="fa-regular fa-clock"></i> Final question</span
+            >
+          </div>
+          <div class="my-auto space-y-5 max-w-4xl mx-auto w-full">
+            <div
+              class="bg-alphagen-purpleGhost border-2 border-alphagen-purplePale p-6 rounded-3xl shadow-md text-center"
+            >
+              <h3 class="text-xl font-extrabold">Predict the output</h3>
+              <div class="code-snippet">print(10 % 3)</div>
+            </div>
+            <div class="grid grid-cols-2 gap-3" id="options-5">
+              <button class="quiz-option" onclick="answer(5, 0, this)">
+                A) 1</button
+              ><button class="quiz-option" onclick="answer(5, 1, this)">
+                B) 3</button
+              ><button class="quiz-option" onclick="answer(5, 2, this)">
+                C) 0</button
+              ><button class="quiz-option" onclick="answer(5, 3, this)">
+                D) 3.33
+              </button>
+            </div>
+            <div id="feedback-5" class="hidden"></div>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-alphagen-purple"
+              >Question 5 Evaluation</span
+            ><button id="next-5" onclick="goToSlide(7)" class="nav-btn hidden">
+              View Final Score <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+        <div
+          id="slide-7"
+          class="slide-panel justify-center items-center text-center"
+        >
+          <div class="max-w-2xl mx-auto space-y-5">
+            <div
+              class="inline-flex items-center gap-2 bg-alphagen-purpleGhost border-2 border-alphagen-purplePale text-alphagen-purple text-sm font-extrabold px-6 py-2 rounded-full uppercase tracking-wider shadow-sm"
+            >
+              Quiz Completed!
+            </div>
+            <h2 class="text-4xl font-extrabold text-alphagen-nearBlack">
+              You Did It, Python Pro!
+            </h2>
+            <div
+              class="bg-alphagen-yellowPale border-2 border-yellow-300 p-5 rounded-3xl shadow-sm"
+            >
+              <span class="text-xs uppercase font-extrabold block mb-1"
+                >Your Final Score</span
+              >
+              <div
+                id="final-score"
+                class="text-4xl font-extrabold text-alphagen-purple font-mono mb-1"
+              >
+                0 / 50
+              </div>
+              <p
+                id="score-message"
+                class="text-xs font-bold text-alphagen-darkGrey"
+              >
+                Every question is a chance to learn something new.
+              </p>
+            </div>
+            <div
+              class="bg-alphagen-purpleGhost border-2 border-alphagen-purplePale p-5 rounded-3xl shadow-sm"
+            >
+              <p class="text-base font-bold text-alphagen-purple italic">
+                “Keep experimenting, keep asking questions, and remember: every
+                great coder started with small steps. You've got this!”
+              </p>
+            </div>
+            <button
+              onclick="resetQuiz()"
+              class="bg-alphagen-yellow hover:bg-alphagen-yellowDark text-alphagen-nearBlack font-extrabold text-sm px-8 py-3.5 rounded-2xl btn-interactive shadow-md"
+            >
+              Retake Quiz <i class="fa-solid fa-rotate-right ml-2"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="nav-bar">
+        <button id="prev-btn" class="nav-btn" onclick="move(-1)" disabled>
+          <i class="fa-solid fa-arrow-left"></i><span>Previous</span></button
+        ><span class="text-xs font-semibold text-white text-center"
+          >Use arrow keys or buttons to navigate</span
+        ><button id="next-btn" class="nav-btn" onclick="move(1)">
+          <span>Next</span><i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+    <script>
+      let currentSlide = 1,
+        totalScore = 0,
+        soundEnabled = true;
+      const answers = { 1: 1, 2: 2, 3: 2, 4: 1, 5: 0 };
+      const explanations = {
+        1: "Python follows operator precedence: multiplication first (3 × 2 = 6), then addition (8 + 6 = 14).",
+        2: "The // operator performs floor division. 17 divided by 5 is 3 remainder 2, so the whole-number result is 3.",
+        3: "The % operator returns the remainder. 14 divided by 4 leaves a remainder of 2.",
+        4: "The ** operator performs exponentiation: for example, 2 ** 3 means 2 raised to the power of 3, which is 8.",
+        5: "The % operator gives the remainder. 10 divided by 3 leaves a remainder of 1.",
+      };
+      let answered = {};
+      let audioCtx;
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch (e) {}
+      function playSound(type) {
+        if (!soundEnabled || !audioCtx) return;
+        try {
+          if (audioCtx.state === "suspended") audioCtx.resume();
+          let o = audioCtx.createOscillator(),
+            g = audioCtx.createGain();
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          let n = audioCtx.currentTime;
+          o.type = type === "wrong" ? "sawtooth" : "sine";
+          o.frequency.setValueAtTime(type === "wrong" ? 180 : 523, n);
+          o.frequency.exponentialRampToValueAtTime(
+            type === "wrong" ? 110 : 659,
+            n + 0.15,
+          );
+          g.gain.setValueAtTime(0.07, n);
+          g.gain.exponentialRampToValueAtTime(0.01, n + 0.25);
+          o.start();
+          o.stop(n + 0.25);
+        } catch (e) {}
+      }
+      function toggleAudio() {
+        soundEnabled = !soundEnabled;
+        document.getElementById("audio-btn").innerHTML = soundEnabled
+          ? '<i class="fa-solid fa-volume-high text-sm"></i>'
+          : '<i class="fa-solid fa-volume-xmark text-sm"></i>';
+      }
+      function update() {
+        document
+          .querySelectorAll(".slide-panel")
+          .forEach((p, i) =>
+            p.classList.toggle("active", i + 1 === currentSlide),
+          );
+        document.getElementById("prev-btn").disabled = currentSlide === 1;
+        document.getElementById("next-btn").disabled = currentSlide === 7;
+        if (currentSlide === 7) {
+          document.getElementById("final-score").textContent =
+            totalScore + " / 50";
+          document.getElementById("score-message").textContent =
+            totalScore === 50
+              ? "Perfect score! You understand these arithmetic operators brilliantly."
+              : totalScore >= 30
+                ? "Nice work! Review the explanations and keep building your Python confidence."
+                : "Good effort! Mistakes help you learn. Review each explanation, then give it another try.";
+          if (typeof confetti === "function" && totalScore >= 30)
+            confetti({ particleCount: 90, spread: 65 });
+        }
+      }
+      function goToSlide(n) {
+        if (n < 1 || n > 7) return;
+        if (
+          n > 1 &&
+          n < 7 &&
+          n > currentSlide &&
+          currentSlide >= 2 &&
+          currentSlide <= 6 &&
+          !answered[currentSlide - 1]
+        )
+          return;
+        currentSlide = n;
+        update();
+        playSound("pop");
+      }
+      function move(d) {
+        let target = currentSlide + d;
+        if (target < 1 || target > 7) return;
+        if (
+          d > 0 &&
+          currentSlide >= 2 &&
+          currentSlide <= 6 &&
+          !answered[currentSlide - 1]
+        )
+          return;
+        currentSlide = target;
+        update();
+        playSound("pop");
+      }
+      function answer(q, choice, btn) {
+        if (answered[q]) return;
+        answered[q] = true;
+        let correct = choice === answers[q];
+        document
+          .querySelectorAll("#options-" + q + " .quiz-option")
+          .forEach((b) => (b.disabled = true));
+        btn.classList.add(correct ? "selected-correct" : "selected-wrong");
+        let fb = document.getElementById("feedback-" + q);
+        fb.className =
+          "feedback " +
+          (correct
+            ? "bg-emerald-50 border-2 border-emerald-300 text-emerald-900"
+            : "bg-red-50 border-2 border-red-300 text-red-900");
+        if (correct) {
+          totalScore += 10;
+          document.getElementById("header-score").textContent = totalScore;
+          playSound("correct");
+          if (typeof confetti === "function")
+            confetti({ particleCount: 35, spread: 45 });
+        } else playSound("wrong");
+        fb.innerHTML =
+          '<div class="font-extrabold mb-1">' +
+          (correct ? "Correct! +10 points" : "Not quite — keep going!") +
+          "</div><div>" +
+          explanations[q] +
+          "</div>";
+        document.getElementById("next-" + q).classList.remove("hidden");
+      }
+      function resetQuiz() {
+        totalScore = 0;
+        answered = {};
+        document.getElementById("header-score").textContent = "0";
+        for (let q = 1; q <= 5; q++) {
+          document
+            .querySelectorAll("#options-" + q + " .quiz-option")
+            .forEach((b) => {
+              b.disabled = false;
+              b.classList.remove("selected-correct", "selected-wrong");
+            });
+          let fb = document.getElementById("feedback-" + q);
+          fb.className = "hidden";
+          fb.innerHTML = "";
+          document.getElementById("next-" + q).classList.add("hidden");
+        }
+        currentSlide = 1;
+        update();
+      }
+      document.addEventListener("keydown", (e) => {
+        if (["INPUT", "SELECT", "TEXTAREA"].includes(e.target.tagName)) return;
+        if (e.key === "ArrowRight") move(1);
+        if (e.key === "ArrowLeft") move(-1);
+      });
+      function scaleStage() {
+        let scale = Math.min(1, (window.innerWidth - 24) / 1280);
+        document
+          .querySelector(".slide-stage")
+          .style.setProperty("--scale", scale);
+        document.querySelector(".nav-bar").style.setProperty("--scale", scale);
+        document.querySelector(".slide-stage").style.transform =
+          "scale(" + scale + ")";
+        document.querySelector(".nav-bar").style.transform =
+          "scale(" + scale + ")";
+        document.querySelector(".slide-stage").style.marginBottom =
+          720 * scale - 720 + "px";
+        document.querySelector(".nav-bar").style.marginBottom =
+          40 * scale - 40 + "px";
+        let topbar = document.getElementById("topbar");
+        topbar.style.width = Math.min(1280, window.innerWidth - 24) + "px";
+      }
+      window.addEventListener("resize", scaleStage);
+      scaleStage();
+      update();
+    </script>
+  </body>
+</html>
